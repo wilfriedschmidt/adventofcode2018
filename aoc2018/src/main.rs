@@ -3,6 +3,7 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 
 use std::env;
 
@@ -35,5 +36,11 @@ fn main()
   {
     day4::go("../data/day4/test1.txt");
     day4::go("../data/day4/input.txt");
+  }
+
+  if args[1]=="day5"
+  {
+    day5::go("../data/day5/test1.txt");
+    day5::go("../data/day5/input.txt");
   }
 }
