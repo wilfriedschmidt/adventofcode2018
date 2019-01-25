@@ -19,3 +19,41 @@ pub fn readfile(filename:&str) -> Vec<u8>
 
   return payload;
 }
+
+pub struct Coord
+{
+  pub x:i32,
+  pub y:i32,
+}
+
+pub fn printgrid(grid:&Vec<i32>, gridwidth:i32)
+{
+  let mut count=0;
+  let mut outstr:String = String::new();
+  for i in 0..grid.len()
+  {    
+    let mut gstr:String = String::from("  ");
+    if grid[i]!=-1
+    {
+      gstr = grid[i].to_string();
+    }
+    loop
+    {
+      if gstr.len()==2
+      {
+        break;
+      }
+      gstr.push(' ')
+    }
+    outstr.push_str(&gstr);
+    outstr.push_str(","); 
+
+    count += 1;
+    if count >= gridwidth
+    {
+      println!("{}", outstr);
+      outstr = String::new();
+      count=0;
+    }
+  }
+}
