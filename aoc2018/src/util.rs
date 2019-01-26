@@ -20,40 +20,19 @@ pub fn readfile(filename:&str) -> Vec<u8>
   return payload;
 }
 
-pub struct Coord
+pub fn strdiff(str1:&str, str2:&str) -> (i32, usize)
 {
-  pub x:i32,
-  pub y:i32,
-}
+  let mut diff=0;
+  let mut index=0;
 
-pub fn printgrid(grid:&Vec<i32>, gridwidth:i32)
-{
-  let mut count=0;
-  let mut outstr:String = String::new();
-  for i in 0..grid.len()
-  {    
-    let mut gstr:String = String::from("  ");
-    if grid[i]!=-1
+  for i in 0..str1.len()
+  {
+    if str1.chars().nth(i) != str2.chars().nth(i)
     {
-      gstr = grid[i].to_string();
-    }
-    loop
-    {
-      if gstr.len()==2
-      {
-        break;
-      }
-      gstr.push(' ')
-    }
-    outstr.push_str(&gstr);
-    outstr.push_str(","); 
-
-    count += 1;
-    if count >= gridwidth
-    {
-      println!("{}", outstr);
-      outstr = String::new();
-      count=0;
-    }
+      diff += 1;
+      index = i;
+    }   
   }
+
+  return (diff, index);
 }

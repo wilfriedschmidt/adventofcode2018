@@ -1,23 +1,6 @@
 use std::collections::HashMap;
 use util::*;
 
-pub fn str_diff(str1:&str, str2:&str) -> (i32, usize)
-{
-  let mut diff=0;
-  let mut index=0;
-
-  for i in 0..str1.len()
-  {
-    if str1.chars().nth(i) != str2.chars().nth(i)
-    {
-      diff += 1;
-      index = i;
-    }   
-  }
-
-  return (diff, index);
-}
-
 pub fn go(filename:&str)
 {
   let payload:Vec<u8> = readfile(filename);
@@ -77,7 +60,7 @@ pub fn go(filename:&str)
     {
       if lines[j].len() > 1
       {
-        let result = str_diff( lines[i], lines[j] );
+        let result = strdiff( lines[i], lines[j] );
         if result.0 == 1
         {
           println!("{}{}", &lines[i][..result.1], &lines[i][result.1+1..] );

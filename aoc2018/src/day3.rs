@@ -48,8 +48,10 @@ pub fn go(filename:&str)
     println!("id:{} x:{} y:{} width:{} height:{}", claims[i].id, claims[i].x, claims[i].y, claims[i].width, claims[i].height); 
   }
 
+  let fabricwidth = 1000 as usize;
+
   let mut fabric:Vec<i32> = Vec::new();
-  fabric.resize(1000*1000,0);
+  fabric.resize(fabricwidth*fabricwidth,0);
 
   let mut mymap = HashMap::new();
 
@@ -62,7 +64,7 @@ pub fn go(filename:&str)
         let nx = x + claims[i].x;
         let ny = y + claims[i].y;
 
-        let offset = (ny*1000+nx) as usize;
+        let offset = (ny*(fabricwidth as i32)+nx) as usize;
         if fabric[offset]==0
         {
           fabric[offset] = claims[i].id;
@@ -85,7 +87,7 @@ pub fn go(filename:&str)
   }
 
   let mut count:i32=0;
-  for i in 0..(1000*1000)
+  for i in 0..(fabricwidth*fabricwidth)
   {
     if fabric[i]==-1
     {

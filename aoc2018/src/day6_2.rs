@@ -1,4 +1,8 @@
 use util::*;
+use range::*;
+use coord::*;
+use grid::*;
+use day6_util::*;
 
 pub fn go(filename:&str)
 {
@@ -6,101 +10,46 @@ pub fn go(filename:&str)
   let payloadstr:String = String::from_utf8(payload).unwrap();
   let lines:Vec<&str> = payloadstr.split('\n').collect();
 
-  let mut coords:Vec<Coord> = Vec::new(); 
+  let mut coords:Vec<Coord> = Vec::new();
+  let mut xrange:Range = Range::default();
+  let mut yrange:Range = Range::default();
+  let mut grid:Grid<i32> = Grid::default();
+ 
+  loaddata( &lines, &mut coords, &mut xrange, &mut yrange, &mut grid );
 
-  let mut minx=100000;
-  let mut miny=100000;
-  let mut maxx=0;
-  let mut maxy=0;
-
-  for i in 0..lines.len()
-  {
-    if lines[i].len() > 1
-    {
-      let parts:Vec<&str> = lines[i].split(',').collect();
-      let x = parts[0].parse::<i32>().unwrap();
-      let y = parts[1][1..].parse::<i32>().unwrap();
-
-      if x < minx
-      {
-        minx = x;
-      }
-
-      if y < miny
-      {
-        miny = y;
-      }
-
-      if x > maxx
-      {
-        maxx = x;
-      }
-  
-      if y > maxy
-      {
-        maxy = y;
-      }
-
-      let coord:Coord = Coord {x,y};
-      coords.push(coord);
-    }
-  }
-
-  minx-=1;
-  miny-=1;
-
-  maxx+=2;
-  maxy+=1;
-
-  let gridwidth = maxx-minx;
-  let gridheight = maxy-miny;
-
-  println!("{} {} {} {} {} {}", minx, maxx, miny, maxy, gridwidth, gridheight);
-
-  let mut grid:Vec<i32> = Vec::new();
-  grid.resize((gridwidth*gridheight) as usize, -1);
-
-  for i in 0..coords.len()
-  {
-    let x = coords[i].x - minx;
-    let y = coords[i].y - miny;
-
-    grid[ (y*gridwidth + x) as usize] = i as i32;
-  }
-
-  printgrid(&grid, gridwidth);
+  grid.print();
   println!("");
 
-  let mut thres:Vec<i32> = Vec::new();
-  thres.resize((gridwidth*gridheight) as usize, -1);
+  let mut thres:Grid<i32> = Grid::default();
+  thres.width = grid.width;
+  thres.height = grid.height;
+  thres.data.resize((thres.width*thres.height) as usize, -1);
    
-  for y in 0..gridheight
+  for y in 0..grid.height
   {
-    for x in 0..gridwidth
+    for x in 0..grid.width
     {
       let mut dist = 0;
       for i in 0..coords.len()
       {
-        let cx = coords[i].x - minx;
-        let cy = coords[i].y - miny;
+        let cx = coords[i].x - xrange.min;
+        let cy = coords[i].y - yrange.min;
         dist += (x - cx).abs() + (y - cy).abs();
       }
 
       if dist < 10000
       {
-        thres[ (y*gridwidth + x) as usize] = 1;
+        thres.put(x,y,1);
       }
     }
   }
 
-  printgrid(&thres, gridwidth);
-
   let mut count = 0;
-  for y in 0..gridheight
+  for y in 0..grid.height
   {
-    for x in 0..gridwidth
+    for x in 0..grid.width
     {
-      if thres[ (y*gridwidth + x) as usize] != -1
+      if *thres.get(x,y) != -1
       {
         count+=1;
       }
